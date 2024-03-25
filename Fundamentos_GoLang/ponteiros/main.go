@@ -22,4 +22,5 @@ func main() {
 
 	*b = 30 // indo no endereço de memória apontado por 'b' e mudando o valor para 30
 	// OBS: 'b' está apontando para 'a' então quando se modifica o valor de 'b' também modifica o de 'a'
+
 }
