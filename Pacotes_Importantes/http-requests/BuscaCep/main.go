@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-type ViaCEP struct { // CRIANDO UMA STRUCT E SETANDO TAGS PARA ELA
+type ViaCEP struct {
 	Cep         string `json:"cep"`
 	Logradouro  string `json:"logradouro"`
 	Complemento string `json:"complemento"`
@@ -23,36 +23,42 @@ type ViaCEP struct { // CRIANDO UMA STRUCT E SETANDO TAGS PARA ELA
 
 func main() {
 	for _, cep := range os.Args[1:] {
-		req, err := http.Get("https://viacep.com.br/ws/" + cep + "/json/") // BUSCANDO AS INFORMAÇOES DA API DO VIACEP ATRAVES DA LIB NET/HTTP COM A FUNCAO GET
+		// Realiza uma requisição HTTP para obter informações do CEP através da API do ViaCEP.
+		req, err := http.Get("https://viacep.com.br/ws/" + cep + "/json/")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Erro ao fazer a requisição: %v\n", err)
-
+			return
 		}
-		defer req.Body.Close() // FECHANDO A REQUISICAO
+		defer req.Body.Close() // Garante que o corpo da requisição seja fechado após o uso.
 
-		res, err := io.ReadAll(req.Body) // UTILIZANDO A LIB IO E A FUNCAO ReadAll PARA FAZER A LEITURA DA RESPOSTA
+		// Lê a resposta da requisição HTTP.
+		res, err := io.ReadAll(req.Body)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Erro ao ler a resposta: %v\n", err)
-
+			return
 		}
 
-		var data ViaCEP                  // CRIANDO UMA STRUCT DO TIPO VIA CEP PARA PODER SALVAR OS DADOS RECEBIDOS PELO BODY
-		err = json.Unmarshal(res, &data) // CONVERTENDO A RESPOSTA PARA UMA STRUCT E SALVANDO ELA NO LOCAL EM MEMORIA ONDE ESTÁ A VARIAVEL DATA
+		// Converte os dados JSON recebidos em uma estrutura ViaCEP.
+		var data ViaCEP
+		err = json.Unmarshal(res, &data)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Erro ao fazer o parse da resposta: %v\n", err)
-
+			return
 		}
 
-		file, err := os.Create("arquivo.txt") // CRIANDO UM ARQUIVO DE TEXTO COM A LIB 'os' USANDO O METODO CREATE
+		// Cria um arquivo de texto para armazenar as informações do CEP.
+		file, err := os.Create("arquivo.txt")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Erro ao criar arquivo: %v\n", err)
-
+			return
 		}
+		defer file.Close() // Garante que o arquivo seja fechado após o uso.
 
-		defer file.Close() // FECHANDO O ARQUIVO FILE
+		// Escreve as informações do CEP no arquivo.
 		_, err = file.WriteString(fmt.Sprintf("CEP: %s,\nLocalidade: %s,\nUF: %s,\nLogradouro: %s\n", data.Cep, data.Localidade, data.Uf, data.Logradouro))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Erro ao escrever no arquivo: %v\n", err)
+			return
 		}
 	}
 }

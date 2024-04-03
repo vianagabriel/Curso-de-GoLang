@@ -1,4 +1,4 @@
-CEP: 03738-040,
+CEP: 03757-000,
 Localidade: São Paulo,
 UF: SP,
-Logradouro: Rua Doutor Piragibe
+Logradouro: Rua Santa Silveira
