@@ -32,7 +32,7 @@ Este repositório foi criado com foco no aprendizado da linguagem Go. Ele aborda
 - [x] Introdução √
 - [x] Configurando ambiente √
 - [x] Fundação √
-- [ ] Pacotes importantes
+- [x] Pacotes importantes
 - [ ] Context
 - [ ] Banco de dados
 - [ ] Packaging
